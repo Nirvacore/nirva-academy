@@ -1,0 +1,32 @@
+name: Learning World slice
+description: A bounded Learning World change within Nirva Academy
+title: "[Learning World] "
+body:
+  - type: textarea
+    id: outcome
+    attributes:
+      label: User outcome and scope
+      description: Reference the PRD acceptance IDs and state what remains deferred.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Observable acceptance checks
+      description: Include accessibility, offline behavior and negative cases as applicable.
+    validations:
+      required: true
+  - type: textarea
+    id: data
+    attributes:
+      label: Data, safety and cost boundary
+      description: Synthetic or live data; tenant and guardian scope; external calls; budget and approvals. Do not include real child data or secrets.
+    validations:
+      required: true
+  - type: textarea
+    id: validation
+    attributes:
+      label: Verification and rollback
+      description: Focused checks, owner decisions and reversible delivery steps.
+    validations:
+      required: true
