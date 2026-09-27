@@ -166,3 +166,7 @@ shop/                   # ร้านค้าตัวอย่าง มี�
 - โดเมนเรียนคือ `https://study.nirva.one`
 - Workflow `.github/workflows/pages.yml` บิลด์ที่รากโดเมน แล้วเขียนไฟล์ `CNAME` เป็น `study.nirva.one` ลงสาขา `gh-pages`
 - VPS Netcup เป็นทางเลือกสำรอง: [deploy/netcup/README.md](deploy/netcup/README.md)
+
+## Nirva Learning World foundation
+
+เอกสารและโครงสำหรับโลกการเรียนรู้เด็กอยู่ที่ [docs/learning-world](docs/learning-world/README.md) ภายใต้ Academy เดิม ขณะนี้มีเฉพาะสัญญาข้อมูลและตัวอย่างจำลอง ยังไม่มีเกมหรือบริการ AI ที่เปิดใช้งาน
