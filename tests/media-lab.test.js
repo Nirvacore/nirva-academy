@@ -234,11 +234,21 @@ test("แบบฝึก Academy และของที่ยังไม่�
   ]);
   const missing = pipeline.missing_sources.map((item) => item.id);
   assert.ok(missing.includes("nirva-ai-deployment-evidence"));
+  assert.equal(missing.includes("asset-library-search"), false);
+  assert.equal(missing.includes("approval-persistence"), false);
   assert.equal(pipeline.nirva_ai_source.inspected_commit, "2b48e588e3714cf6d78493eed640adeda4ff5927");
   assert.equal(pipeline.nirva_ai_source.source_available, true);
   assert.equal(pipeline.nirva_ai_source.deployed_cloud_verified, false);
   assert.ok(missing.includes("storyboard-module"));
   assert.ok(missing.includes("live-oauth-publish"));
+
+  const evidenceFiles = [
+    "content/media/pipeline.yaml",
+    "content/core/media-script-storyboard.md",
+    "content/scripts/th/media-script-storyboard.md",
+  ].map((file) => fs.readFileSync(path.join(root, file), "utf8")).join("\n");
+  assert.equal(evidenceFiles.includes("searchAssets() คืนอาร์เรย์ว่าง"), false);
+  assert.equal(evidenceFiles.includes("เป็นสตับ คืน success โดยไม่บันทึกฐานข้อมูล"), false);
 });
 
 test("import ความคืบหน้าปฏิเสธ envelope แปลกและ normalize ทุกฟิลด์", () => {

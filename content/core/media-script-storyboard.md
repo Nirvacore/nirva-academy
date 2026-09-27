@@ -22,7 +22,9 @@
 
 - ไม่พบหน้าสตอรี่บอร์ดใน `app/studio/page.tsx`
 - คำ `teaser storyboards` อยู่ใน `upstream/nirva-ai/apps/nirva-studio-os/src/lib/mock-data/index.ts` เท่านั้น
-- `server/media/library.ts` มีโครงคลังสินทรัพย์ แต่ `searchAssets()` คืนอาร์เรย์ว่าง
+
+ส่วน `Nirvacore/nirva-AI@2b48e588/server/media/library.ts` มีการค้นคลังจากฐานข้อมูล
+โดยกรอง `organizationId` แล้ว แต่การพบซอร์สยังไม่ยืนยันว่าบริการนี้ deploy บนคลาวด์
 
 ดังนั้นแผ่นสตอรี่บอร์ดในแล็บนี้เป็น **Academy-authored worksheet** มีสามจังหวะ: เปิด ปัญหา ทางออก แต่ละช่องกรอกภาพ เสียง และหมายเหตุ คนกรอก เธอช่วยร่างได้ แต่ห้ามเคลมว่า Studio จริงมีปุ่มนี้
 

@@ -48,13 +48,6 @@ missing_sources:
     note: >
       docs/NIRVA_MEDIA_PRODUCT_MEMORY.md ระบุชัดว่า live third-party authorization
       และ publishing ยังไม่ต่อ และ POST /api/publish-jobs ค้างที่ blocked_auth
-  - id: asset-library-search
-    asked: ค้นคลังสินทรัพย์
-    note: upstream/nirva-ai/server/media/library.ts ฟังก์ชัน searchAssets คืนอาร์เรย์ว่าง
-  - id: approval-persistence
-    asked: เวิร์กโฟลว์อนุมัติหลายขั้นที่บันทึกได้
-    note: upstream/nirva-ai/server/media/approval.ts เป็นสตับ คืน success โดยไม่บันทึกฐานข้อมูล
-
 reuse:
   - id: brief
     title_th: Brief
@@ -93,6 +86,7 @@ reuse:
     academy_action: ส่งตรวจแล้วติ๊กว่ารีวิวด้วยตาตนเอง ก่อนอนุมัติ
     files:
       - NirvaAI@2b48e588/shared/media.ts — STATUS_FLOW draft → review → approved (source only)
+      - NirvaAI@2b48e588/server/media/approval.ts — บันทึก approval tasks และ feedback ในฐานข้อมูล (source only)
       - NirvaMedia/app/studio/page.tsx — ปุ่มส่งตรวจ / อนุมัติ
       - NirvaMedia/app/api/posts/[id]/route.ts — PATCH ใช้ canMoveContentStatus ถ้าข้ามขั้นได้ 409
       - NirvaMedia/lib/upstream-media-adapter.ts — canMoveContentStatus
