@@ -17,6 +17,21 @@ export interface MissionDefinition {
   readonly hintMode: "scripted";
 }
 
+export type PredictionEvidence =
+  | { readonly status: "not-attempted" }
+  | { readonly status: "unknown" }
+  | { readonly status: "recorded"; readonly choiceId: string };
+
+export type ChildExplanationEvidence =
+  | { readonly status: "not-attempted" }
+  | { readonly status: "unknown" }
+  | { readonly status: "recorded"; readonly responseId: string };
+
+export type RevisedStrategyEvidence =
+  | { readonly status: "not-attempted" }
+  | { readonly status: "unknown" }
+  | { readonly status: "recorded"; readonly strategyId: string };
+
 // Future persisted envelope, not an authorization implementation.
 export interface TenantLearningEvidence {
   readonly contractVersion: 1;
@@ -28,9 +43,12 @@ export interface TenantLearningEvidence {
   readonly eventId: string;
   readonly observedAt: string;
   readonly observation: {
+    readonly questionId: string;
+    readonly prediction: PredictionEvidence;
     readonly actionId: string;
     readonly consequenceId: string;
-    readonly revisedPrediction: boolean;
+    readonly childExplanation: ChildExplanationEvidence;
+    readonly revisedStrategy: RevisedStrategyEvidence;
   };
   readonly interpretation:
     | { readonly status: "insufficient-evidence" }
