@@ -4,6 +4,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 const yaml = require("js-yaml");
 const gates = require("../lib/media-lab-gates");
+const progressImport = require("../lib/progress-import");
 
 const root = path.join(__dirname, "..");
 
@@ -232,9 +233,85 @@ test("แบบฝึก Academy และของที่ยังไม่�
     "synthetic-campaign",
   ]);
   const missing = pipeline.missing_sources.map((item) => item.id);
-  assert.ok(missing.includes("nirva-ai-live"));
+  assert.ok(missing.includes("nirva-ai-deployment-evidence"));
+  assert.equal(pipeline.nirva_ai_source.inspected_commit, "2b48e588e3714cf6d78493eed640adeda4ff5927");
+  assert.equal(pipeline.nirva_ai_source.source_available, true);
+  assert.equal(pipeline.nirva_ai_source.deployed_cloud_verified, false);
   assert.ok(missing.includes("storyboard-module"));
   assert.ok(missing.includes("live-oauth-publish"));
+});
+
+test("import ความคืบหน้าปฏิเสธ envelope แปลกและ normalize ทุกฟิลด์", () => {
+  assert.throws(() => progressImport.normalizeProgressDump(null), /รูปแบบไฟล์ไม่รู้จัก/);
+  assert.throws(() => progressImport.normalizeProgressDump({ v: 2 }), /รูปแบบไฟล์ไม่รู้จัก/);
+
+  const huge = "x".repeat(10000);
+  const normalized = progressImport.normalizeProgressDump({
+    v: 1,
+    track: "evil",
+    done: ["core-00", 7, "core-00", huge],
+    journal: { "core-00": { reflection: huge, bad: 42 }, nope: "row" },
+    checks: { "core-00": 200, nope: "100" },
+    plan: "other",
+    name: huge,
+    leitner: { "core-00": 99, bad: "3" },
+    last: "https://evil.example",
+    seconds: Number.POSITIVE_INFINITY,
+    rubric: { "core-00": ["a", 2, huge] },
+    nowdo: { "core-00": ["do", null, huge] },
+    mediaLab: { facts: ["malformed-row"] },
+  });
+
+  assert.equal(normalized.track, "cursor");
+  assert.deepEqual(normalized.done, ["core-00"]);
+  assert.equal(normalized.journal["core-00"].reflection.length, progressImport.LIMITS.text);
+  assert.equal(Object.hasOwn(normalized.journal["core-00"], "bad"), false);
+  assert.equal(Object.hasOwn(normalized.journal, "nope"), false);
+  assert.deepEqual(normalized.checks, { "core-00": 100 });
+  assert.equal(normalized.plan, "intensive");
+  assert.equal(normalized.name.length, progressImport.LIMITS.name);
+  assert.deepEqual(normalized.leitner, { "core-00": progressImport.LIMITS.leitner });
+  assert.equal(normalized.last, "");
+  assert.equal(normalized.seconds, 0);
+  assert.deepEqual(normalized.rubric, { "core-00": ["a"] });
+  assert.deepEqual(normalized.nowdo, { "core-00": ["do"] });
+  assert.deepEqual(normalized.mediaLab.facts, [{ claim: "", source: "" }]);
+});
+
+test("Media Lab import ตัดแถวผิดรูปและจำกัดทุกค่าก่อน persist", () => {
+  const huge = "x".repeat(10000);
+  const piece = gates.migratePiece({
+    goal: huge,
+    facts: ["malformed-row", { claim: huge, source: 7 }, { claim: "ok", source: "path/file.ts" }],
+    assumptions: [null, { claim: "guess", why: huge }],
+    scripts: { line: huge, instagram: 7, youtube: "ok" },
+    storyboard: ["bad", { beat: huge, visual: huge, audio: 7, note: "ok" }],
+    assets: ["bad", { channel: huge, format: 7, title: "ok", body: huge }],
+    status: "published",
+    humanReviewed: "yes",
+    rubric: ["quality-claim", "unknown", "quality-claim"],
+    checklists: { "media-brief-evidence": ["goal", "bad", "goal"], evil: ["x"] },
+    publishResult: { ok: true, published: true, code: huge, status: "published", message: huge },
+    autoPublish: true,
+  });
+
+  assert.equal(piece.goal.length, 4000);
+  assert.deepEqual(piece.facts.map((row) => Object.keys(row)), [["claim", "source"], ["claim", "source"]]);
+  assert.equal(piece.facts[0].claim.length, 4000);
+  assert.equal(piece.facts[0].source, "");
+  assert.equal(piece.assumptions[0].why.length, 4000);
+  assert.equal(piece.scripts.instagram, "");
+  assert.equal(piece.storyboard.length, 3);
+  assert.equal(piece.assets.length, 1);
+  assert.equal(piece.assets[0].format, "");
+  assert.equal(piece.status, "published");
+  assert.equal(piece.humanReviewed, false);
+  assert.deepEqual(piece.rubric, ["quality-claim"]);
+  assert.deepEqual(piece.checklists["media-brief-evidence"], ["goal"]);
+  assert.equal(Object.hasOwn(piece.checklists, "evil"), false);
+  assert.equal(piece.publishResult.published, false);
+  assert.equal(piece.publishResult.ok, false);
+  assert.equal(Object.hasOwn(piece, "autoPublish"), false);
 });
 
 test("แคมเปญสังเคราะห์เดินทั้งไพป์ไลน์ แต่ห้ามเผยแพร่", () => {
@@ -269,7 +346,7 @@ test("คีย์ localStorage ของ Academy เดิมไม่เปล
   assert.equal(progress.includes('DONE_KEY = "ai-acadamy:done"'), true);
   assert.equal(progress.includes('TRACK_KEY = "ai-acadamy:track"'), true);
   assert.equal(progress.includes('MEDIA_LAB_KEY = "ai-acadamy:media-lab"'), true);
-  assert.equal(progress.includes("migratePiece(dump.mediaLab)"), true);
+  assert.equal(progress.includes("normalizeProgressDump(dump)"), true);
   assert.equal(gates.PIECE_VERSION, 2);
 
   const kept = gates.migrateDoneIds(["core-00", "media-lab", "lab-01"]);

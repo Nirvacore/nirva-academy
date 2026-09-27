@@ -1,7 +1,7 @@
 # Nirva Media applied-learning map
 # Media is work context, not a fifth tool track.
-# Citations are public GitHub paths from Nirvacore/NirvaMedia@codex/nirvamedia-web
-# inspected 2026-08-28. Do not invent repos, routes, secrets, or production systems.
+# Citations include public GitHub source paths inspected at exact revisions.
+# Source availability is not evidence that a cloud service is deployed or reachable.
 
 id: nirva-media-lab
 role: applied-learning
@@ -17,12 +17,27 @@ product:
   default_branch: codex/nirvamedia-web
   inspected: "2026-08-28"
 
+nirva_ai_source:
+  repository: https://github.com/Nirvacore/nirva-AI
+  default_branch: main
+  inspected_commit: 2b48e588e3714cf6d78493eed640adeda4ff5927
+  inspected: "2026-09-28"
+  source_available: true
+  deployed_cloud_verified: false
+  evidence:
+    - shared/media.ts
+    - server/media/strategy.ts
+    - server/media/library.ts
+    - server/media/approval.ts
+    - server/media/publish.ts
+
 missing_sources:
-  - id: nirva-ai-live
-    asked: https://github.com/Nirvacore/nirva-AI
+  - id: nirva-ai-deployment-evidence
+    asked: หลักฐานว่า Nirva AI Media ทำงานบนคลาวด์จริง
     note: >
-      เอกสาร Media ชี้ไปรีโปนี้และคอมมิต 12b7034 แต่โทเคนนี้ได้ HTTP 404 ทั้ง REST และ GraphQL
-      จึงใช้ได้แค่สแนปช็อตใน NirvaMedia/upstream ห้ามเดาว่ามีบริการคลาวด์ของ nirva-AI ทำงานอยู่
+      เปิดอ่านซอร์ส Nirvacore/nirva-AI main ที่คอมมิต
+      2b48e588e3714cf6d78493eed640adeda4ff5927 ได้แล้ว แต่การมีซอร์สไม่ยืนยันว่า
+      Media API หรือ connector ใดถูก deploy และเข้าถึงได้บนคลาวด์ จึงห้ามรายงานว่า live
   - id: storyboard-module
     asked: สตอรี่บอร์ดเป็นขั้นในไพป์ไลน์
     note: >
@@ -48,7 +63,7 @@ reuse:
       - NirvaMedia/db/schema.ts — campaigns.brief
       - NirvaMedia/app/studio/page.tsx — แผง 01 Campaign brief
       - NirvaMedia/app/api/campaigns/route.ts — POST บังคับ brief
-      - NirvaMedia/upstream/nirva-ai/shared/media.ts — BrandBrief
+      - NirvaAI@2b48e588/shared/media.ts — BrandBrief (source available; deployment unverified)
       - NirvaMedia/upstream/nirva-ai-complete/docs/NMD_MEDIA_ARCHITECTURE.md — GET/PUT /api/v1/media/brief
   - id: research
     title_th: วิจัยและหลักฐาน
@@ -56,13 +71,13 @@ reuse:
       วางพาธหรือคำที่เปิดตามได้ก่อนเชื่อเธอ ขั้นนี้สอนท่างานวิจัย
       เพราะ strategy.ts ในต้นทางให้โมเดล research in your head ซึ่งคอร์สนี้ห้าม
     files:
-      - NirvaMedia/upstream/nirva-ai/server/media/strategy.ts — เป้า → Big Idea + insight → drafts
+      - NirvaAI@2b48e588/server/media/strategy.ts — เป้า → Big Idea + insight → drafts (source only)
       - NirvaMedia/upstream/nirva-ai-complete/docs/NMD_MEDIA_ARCHITECTURE.md — POST /api/v1/media/campaign
   - id: script
     title_th: สคริปต์และสตอรี่บอร์ด
     academy_action: เขียนตะขอ สามจังหวะ และช่องทางก่อนสั่งสร้างสินทรัพย์
     files:
-      - NirvaMedia/upstream/nirva-ai/shared/media.ts — ContentType รวม script
+      - NirvaAI@2b48e588/shared/media.ts — ContentType รวม script (source only)
       - NirvaMedia/app/api/campaigns/route.ts — แม่แบบ TikTok เตรียมสคริปต์ / YouTube video outline
       - NirvaMedia/upstream/nirva-ai/apps/nirva-studio-os/src/lib/mock-data/index.ts — คำ storyboards ใน mock เท่านั้น
   - id: assets
@@ -71,13 +86,13 @@ reuse:
     files:
       - NirvaMedia/app/api/campaigns/route.ts — สร้าง campaign_posts สถานะ draft
       - NirvaMedia/lib/upstream-media-adapter.ts — adaptActiveChannelText
-      - NirvaMedia/upstream/nirva-ai/server/media/images.ts — NMD-1200 image providers รวมโหมดเดโม
-      - NirvaMedia/upstream/nirva-ai/server/media/library.ts — โครงคลังสินทรัพย์
+      - NirvaAI@2b48e588/server/media/images.ts — NMD-1200 image providers รวมโหมดเดโม (source only)
+      - NirvaAI@2b48e588/server/media/library.ts — โครงคลังสินทรัพย์ (source only)
   - id: review
     title_th: คนตรวจ
     academy_action: ส่งตรวจแล้วติ๊กว่ารีวิวด้วยตาตนเอง ก่อนอนุมัติ
     files:
-      - NirvaMedia/upstream/nirva-ai/shared/media.ts — STATUS_FLOW draft → review → approved
+      - NirvaAI@2b48e588/shared/media.ts — STATUS_FLOW draft → review → approved (source only)
       - NirvaMedia/app/studio/page.tsx — ปุ่มส่งตรวจ / อนุมัติ
       - NirvaMedia/app/api/posts/[id]/route.ts — PATCH ใช้ canMoveContentStatus ถ้าข้ามขั้นได้ 409
       - NirvaMedia/lib/upstream-media-adapter.ts — canMoveContentStatus

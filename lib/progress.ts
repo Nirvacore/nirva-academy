@@ -1,4 +1,4 @@
-import { migratePiece } from "@/lib/media-lab-gates";
+import { normalizeProgressDump } from "@/lib/progress-import";
 
 export const TRACK_KEY = "ai-acadamy:track";
 export const DONE_KEY = "ai-acadamy:done";
@@ -125,19 +125,19 @@ export function exportProgress(): ProgressDump {
 }
 
 export function importProgress(dump: ProgressDump) {
-  if (dump.v !== 1) throw new Error("รูปแบบไฟล์ไม่รู้จัก");
-  window.localStorage.setItem(TRACK_KEY, dump.track || "cursor");
-  writeJson(DONE_KEY, dump.done ?? []);
-  writeJson(JOURNAL_KEY, dump.journal ?? {});
-  writeJson(CHECKS_KEY, dump.checks ?? {});
-  window.localStorage.setItem(PLAN_KEY, dump.plan === "evening" ? "evening" : "intensive");
-  window.localStorage.setItem(NAME_KEY, dump.name ?? "");
-  writeJson(LEITNER_KEY, dump.leitner ?? {});
-  if (dump.last) window.localStorage.setItem(LAST_KEY, dump.last);
-  if (typeof dump.seconds === "number") window.localStorage.setItem(SECONDS_KEY, String(dump.seconds));
-  if (dump.rubric) writeJson(RUBRIC_KEY, dump.rubric);
-  if (dump.nowdo) writeJson(NOWDO_KEY, dump.nowdo);
-  if (dump.mediaLab) writeJson(MEDIA_LAB_KEY, migratePiece(dump.mediaLab));
+  const safe = normalizeProgressDump(dump);
+  window.localStorage.setItem(TRACK_KEY, safe.track);
+  writeJson(DONE_KEY, safe.done);
+  writeJson(JOURNAL_KEY, safe.journal);
+  writeJson(CHECKS_KEY, safe.checks);
+  window.localStorage.setItem(PLAN_KEY, safe.plan);
+  window.localStorage.setItem(NAME_KEY, safe.name);
+  writeJson(LEITNER_KEY, safe.leitner);
+  safe.last ? window.localStorage.setItem(LAST_KEY, safe.last) : window.localStorage.removeItem(LAST_KEY);
+  window.localStorage.setItem(SECONDS_KEY, String(safe.seconds));
+  writeJson(RUBRIC_KEY, safe.rubric);
+  writeJson(NOWDO_KEY, safe.nowdo);
+  writeJson(MEDIA_LAB_KEY, safe.mediaLab);
 }
 
 export function journalFilled(id: string): boolean {
