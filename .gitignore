@@ -4,3 +4,8 @@ out/
 *.log
 .DS_Store
 tsconfig.tsbuildinfo
+
+# Local environment files; safe examples only
+.env
+.env.*
+!.env.example

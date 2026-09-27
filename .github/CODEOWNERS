@@ -1,0 +1,8 @@
+# Verified repository administrator. Review routing is not branch protection.
+* @Nirvacore
+/docs/learning-world/ @Nirvacore
+/apps/learning-world/ @Nirvacore
+/packages/learning-core/ @Nirvacore
+/packages/game-core/ @Nirvacore
+/.github/ @Nirvacore
+/AGENTS.md @Nirvacore
