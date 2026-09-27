@@ -5,7 +5,9 @@
     "dev": "next dev --hostname 0.0.0.0 --port 3000",
     "build": "next build",
     "start": "serve out -n -l tcp://0.0.0.0:3000",
-    "test:shop": "node --test shop/price.test.js"
+    "test:shop": "node --test shop/price.test.js",
+    "typecheck": "tsc --noEmit",
+    "check:learning-world": "node scripts/learning-world/check-foundation.mjs"
   },
   "dependencies": {
     "js-yaml": "^4.1.1",
