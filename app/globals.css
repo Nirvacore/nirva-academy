@@ -66,6 +66,7 @@ body {
 .tree-primary, .tree-retry { min-height: 52px; border: 0; border-radius: 14px; background: #efc86e; color: #1b291f; font: 700 1.05rem "Sarabun", sans-serif; padding: 10px 20px; cursor: pointer; }
 .tree-primary:disabled { opacity: .5; cursor: default; }
 .tree-hint { margin-left: 12px; border: 0; background: transparent; color: #d7eed7; text-decoration: underline; font: inherit; cursor: pointer; }
+.tree-choice-grid + .tree-hint { margin: 12px 0 0; }
 .tree-hint:disabled { opacity: .5; }
 .tree-step .tree-hint-text { margin: 12px 0 0; color: #e9e4bc; }
 .tree-step .tree-consequence { font-weight: 700; color: #f8e4a9; }

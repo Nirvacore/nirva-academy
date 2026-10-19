@@ -19,7 +19,13 @@ const copy = {
     step1: "1 · สังเกตและคาดการณ์", question: "ถ้าเติมน้ำ ต้นไม้จะเป็นอย่างไร?",
     prediction: { dry: "ยังแห้ง", balanced: "ฟื้นตัว", waterlogged: "น้ำมากไป", unsure: "ยังไม่แน่ใจ" },
     step2: "2 · ลงมือทดลอง", action: "เลือกปริมาณน้ำ", unit: "ขัน", water: "เติมน้ำ", change: "เปลี่ยนคำคาดการณ์",
-    hint: "ขอคำใบ้", hints: ["ลองดูใบที่ห้อยและดินใต้ต้น", "น้ำที่น้อยหรือมากเกินไปอาจให้ผลต่างกัน", "ลองเลือก 1, 2 หรือ 3 ขัน แล้วเปรียบเทียบผล"],
+    hint: "ขอคำใบ้", hints: ["ลองสังเกตใบที่ห้อยและดิน: ต้นไม้ต้นนี้อาจต้องการอะไร?", "ตามกติกาภารกิจนี้ น้ำน้อยไปและมากไปให้ผลต่างกัน ลองเทียบ 1, 2 และ 3 ขัน"],
+    workedHint: "ดูตัวอย่างคำอธิบาย", hideWorkedHint: "ซ่อนตัวอย่างคำอธิบาย",
+    workedExample: {
+      dry: "รอบนี้เริ่มจากดินแห้งและเติม 1 ขัน ตามกติกาภารกิจนี้ต้นไม้ยังได้น้ำไม่พอ ใบจึงยังห้อยอยู่ ลอง 2 ขันในรอบหน้าแล้วดูผล",
+      balanced: "รอบนี้เริ่มจากดินแห้งและเติม 2 ขัน ตามกติกาภารกิจนี้น้ำพอดี ใบจึงยกขึ้น ลองเทียบกับ 1 หรือ 3 ขันในรอบหน้า",
+      waterlogged: "รอบนี้เริ่มจากดินแห้งและเติม 3 ขัน ตามกติกาภารกิจนี้น้ำมากเกินไป ดินจึงแฉะ ลอง 2 ขันในรอบหน้าแล้วดูผล",
+    },
     result: "3 · ดูผลและอธิบาย", outcome: { dry: "ต้นไม้ยังดูแห้ง ดินยังขาดน้ำ", balanced: "ใบยกขึ้น ต้นไม้ได้รับน้ำพอดี", waterlogged: "ดินแฉะ รากได้รับน้ำมากเกินไป" },
     compare: "คุณคาดว่า {prediction} · ผลที่เห็นคือ {outcome}",
     explain: "คิดว่าเพราะอะไร?", explanation: { "too-little": "น้ำน้อยเกินไป", enough: "น้ำพอดี", "too-much": "น้ำมากเกินไป", unsure: "ยังไม่แน่ใจ" },
@@ -37,7 +43,13 @@ const copy = {
     step1: "1 · Observe and predict", question: "What might happen if you add water?",
     prediction: { dry: "Still dry", balanced: "It recovers", waterlogged: "Too much water", unsure: "I'm unsure" },
     step2: "2 · Try it", action: "Choose an amount of water", unit: "cup", water: "Add water", change: "Change prediction",
-    hint: "Give me a hint", hints: ["Look at the drooping leaves and the soil", "Too little and too much water can have different effects", "Try 1, 2, or 3 cups and compare the result"],
+    hint: "Give me a hint", hints: ["Look at the drooping leaves and the soil: what might this tree need?", "In this mission, too little and too much water have different effects. Compare 1, 2, and 3 cups."],
+    workedHint: "See an example explanation", hideWorkedHint: "Hide the example explanation",
+    workedExample: {
+      dry: "This round began with dry soil and 1 cup of water. Under this mission's rules, the tree still lacks water, so its leaves stay droopy. Try 2 cups next round and observe the result.",
+      balanced: "This round began with dry soil and 2 cups of water. Under this mission's rules, that is enough, so the leaves lift. Compare with 1 or 3 cups next round.",
+      waterlogged: "This round began with dry soil and 3 cups of water. Under this mission's rules, that is too much, so the soil turns soggy. Try 2 cups next round and observe the result.",
+    },
     result: "3 · See and explain", outcome: { dry: "The tree still looks dry; the soil needs water", balanced: "The leaves lift; the tree has enough water", waterlogged: "The soil is soggy; the roots got too much water" },
     compare: "You predicted {prediction} · You observed {outcome}",
     explain: "Why might that be?", explanation: { "too-little": "Too little water", enough: "Enough water", "too-much": "Too much water", unsure: "I'm unsure" },
@@ -77,6 +89,7 @@ export function TreeMission() {
   const [explanation, setExplanation] = useState<Explanation | null>(null);
   const [strategy, setStrategy] = useState<Strategy | null>(null);
   const [hintStep, setHintStep] = useState(0);
+  const [showWorkedHint, setShowWorkedHint] = useState(false);
   const t = copy[locale];
   const condition = result?.state.treeCondition ?? "dry";
 
@@ -96,6 +109,7 @@ export function TreeMission() {
     setExplanation(null);
     setStrategy(null);
     setHintStep(0);
+    setShowWorkedHint(false);
   }
 
   return (
@@ -119,9 +133,9 @@ export function TreeMission() {
         <div className="tree-steps">
           <section className="tree-step"><h2>{t.step1}</h2><p>{t.question}</p><div className="tree-choice-grid">{(Object.keys(t.prediction) as Prediction[]).map((choice) => <button key={choice} type="button" disabled={!!result} aria-pressed={prediction === choice} onClick={() => setPrediction(choice)}>{t.prediction[choice]}</button>)}</div></section>
 
-          <section className="tree-step"><h2>{t.step2}</h2><p>{t.action}</p><div className="tree-water-choices">{([1, 2, 3] as const).map((n) => <button key={n} type="button" disabled={!!result} aria-pressed={water === n} onClick={() => setWater(n)}><strong>{n}</strong> {n === 1 ? t.unit : t.cups}</button>)}</div><button className="tree-primary" type="button" disabled={!prediction || !!result} onClick={addWater}>{t.water}</button><button className="tree-hint" type="button" disabled={hintStep >= 3} onClick={() => setHintStep((step) => Math.min(3, step + 1))}>{t.hint}</button>{hintStep > 0 && <p className="tree-hint-text" role="status">{t.hints[hintStep - 1]}</p>}</section>
+          <section className="tree-step"><h2>{t.step2}</h2><p>{t.action}</p><div className="tree-water-choices">{([1, 2, 3] as const).map((n) => <button key={n} type="button" disabled={!!result} aria-pressed={water === n} onClick={() => setWater(n)}><strong>{n}</strong> {n === 1 ? t.unit : t.cups}</button>)}</div><button className="tree-primary" type="button" disabled={!prediction || !!result} onClick={addWater}>{t.water}</button>{!result && <button className="tree-hint" type="button" disabled={hintStep >= 2} onClick={() => setHintStep((step) => Math.min(2, step + 1))}>{t.hint}</button>}{!result && hintStep > 0 && <p className="tree-hint-text" role="status">{t.hints[hintStep - 1]}</p>}</section>
 
-          {result && <section className="tree-step"><h2>{t.result}</h2><p className="tree-consequence">{t.outcome[condition]}</p><p className="tree-compare">{t.compare.replace("{prediction}", prediction ? t.prediction[prediction] : t.notYet).replace("{outcome}", t.outcome[condition])}</p><p>{t.explain}</p><div className="tree-choice-grid">{(Object.keys(t.explanation) as Explanation[]).map((choice) => <button key={choice} type="button" aria-pressed={explanation === choice} onClick={() => setExplanation(choice)}>{t.explanation[choice]}</button>)}</div></section>}
+          {result && <section className="tree-step"><h2>{t.result}</h2><p className="tree-consequence">{t.outcome[condition]}</p><p className="tree-compare">{t.compare.replace("{prediction}", prediction ? t.prediction[prediction] : t.notYet).replace("{outcome}", t.outcome[condition])}</p><p>{t.explain}</p><div className="tree-choice-grid">{(Object.keys(t.explanation) as Explanation[]).map((choice) => <button key={choice} type="button" aria-pressed={explanation === choice} onClick={() => setExplanation(choice)}>{t.explanation[choice]}</button>)}</div><button className="tree-hint" type="button" aria-expanded={showWorkedHint} onClick={() => setShowWorkedHint((show) => !show)}>{showWorkedHint ? t.hideWorkedHint : t.workedHint}</button>{showWorkedHint && <p className="tree-hint-text" role="status">{t.workedExample[condition]}</p>}</section>}
 
           {result && <section className="tree-step"><h2>{t.reflect}</h2><p>{t.next}</p><div className="tree-choice-grid">{(Object.keys(t.strategy) as Strategy[]).map((choice) => <button key={choice} type="button" aria-pressed={strategy === choice} onClick={() => setStrategy(choice)}>{t.strategy[choice]}</button>)}</div><p className="tree-kindness">{t.noJudgment}</p><button className="tree-retry" type="button" onClick={reset}>{t.retry}</button><small>{t.reset}</small></section>}
         </div>
