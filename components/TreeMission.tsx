@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import type { Locale } from "@/packages/learning-core/src/index";
 import type { SimulationResult } from "@/packages/game-core/src/index";
@@ -25,8 +25,8 @@ const copy = {
     explain: "คิดว่าเพราะอะไร?", explanation: { "too-little": "น้ำน้อยเกินไป", enough: "น้ำพอดี", "too-much": "น้ำมากเกินไป", unsure: "ยังไม่แน่ใจ" },
     reflect: "4 · ปรับวิธีและลองใหม่", next: "ถ้าลองอีกครั้ง คุณจะทำอย่างไร?",
     strategy: { less: "ใช้น้ำน้อยลง", same: "ใช้เท่าเดิม", more: "ใช้น้ำมากขึ้น", wait: "รอดูอีกหน่อย" },
-    retry: "ลองใหม่ตั้งแต่ต้น", evidence: "สิ่งที่เกิดขึ้นในรอบนี้", observed: "สิ่งที่สังเกตได้",
-    interpretation: "การตีความ", unknown: "ยังไม่มีข้อมูลพอจะสรุปความสามารถในการเรียนรู้จากการลองครั้งเดียว",
+    retry: "ลองใหม่ตั้งแต่ต้น", evidence: "สิ่งที่เกิดขึ้นในรอบนี้", observed: "สิ่งที่ทำและผลที่เห็น",
+    childThinking: "สิ่งที่คุณคิด", interpretation: "สิ่งที่ยังสรุปไม่ได้", unknown: "ยังไม่มีข้อมูลพอจะสรุปความสามารถในการเรียนรู้จากการลองครั้งเดียว",
     noJudgment: "คำตอบแรกผิดได้ การลองใหม่คือส่วนหนึ่งของการเรียนรู้", reset: "การลองใหม่จะล้างคำตอบรอบนี้จากหน้านี้",
     waterLevel: "ปริมาณน้ำ", cups: "ขัน", notYet: "ยังไม่ได้เลือก", predictionLabel: "คาดการณ์", actionLabel: "ลงมือ", outcomeLabel: "ผลที่เห็น", explanationLabel: "คำอธิบาย", strategyLabel: "ครั้งหน้า",
   },
@@ -43,8 +43,8 @@ const copy = {
     explain: "Why might that be?", explanation: { "too-little": "Too little water", enough: "Enough water", "too-much": "Too much water", unsure: "I'm unsure" },
     reflect: "4 · Reflect and retry", next: "What would you do next time?",
     strategy: { less: "Use less water", same: "Use the same amount", more: "Use more water", wait: "Wait and watch" },
-    retry: "Try again from the start", evidence: "What happened this round", observed: "What was observed",
-    interpretation: "Interpretation", unknown: "One try is not enough evidence to judge anyone's learning ability",
+    retry: "Try again from the start", evidence: "What happened this round", observed: "Action and observed outcome",
+    childThinking: "What you thought", interpretation: "What remains unknown", unknown: "One try is not enough evidence to judge anyone's learning ability",
     noJudgment: "A first guess can be wrong. Trying again is part of learning.", reset: "Retry clears this round's answers from this page",
     waterLevel: "Water level", cups: "cups", notYet: "Not chosen yet", predictionLabel: "Prediction", actionLabel: "Action", outcomeLabel: "Outcome", explanationLabel: "Explanation", strategyLabel: "Next time",
   },
@@ -80,6 +80,10 @@ export function TreeMission() {
   const t = copy[locale];
   const condition = result?.state.treeCondition ?? "dry";
 
+  useEffect(() => {
+    document.title = `${wiltedTree.title[locale]} · Nirva Academy`;
+  }, [locale]);
+
   function addWater() {
     if (!prediction || result) return;
     setResult(simulateTree(initialTreeState(), { kind: "add-water", units: water }));
@@ -95,9 +99,9 @@ export function TreeMission() {
   }
 
   return (
-    <div className="tree-mission">
+    <div className="tree-mission" lang={locale}>
       <header className="tree-header">
-        <div className="tree-topline"><Link href="/">← {t.back}</Link><div className="tree-languages" aria-label="Language"><button type="button" aria-pressed={locale === "th"} onClick={() => setLocale("th")}>ไทย</button><button type="button" aria-pressed={locale === "en"} onClick={() => setLocale("en")}>English</button></div></div>
+        <div className="tree-topline"><Link href="/">← {t.back}</Link><div className="tree-languages" role="group" aria-label={locale === "th" ? "ภาษา" : "Language"}><button type="button" aria-pressed={locale === "th"} onClick={() => setLocale("th")}>ไทย</button><button type="button" aria-pressed={locale === "en"} onClick={() => setLocale("en")}>English</button></div></div>
         <p className="tree-eyebrow">{t.eyebrow}</p>
         <h1>{wiltedTree.title[locale]}</h1>
         <p className="tree-lede">{t.intro}</p>
@@ -123,7 +127,25 @@ export function TreeMission() {
         </div>
       </div>
 
-      {result && <section className="tree-evidence" aria-label={t.evidence}><h2>{t.evidence}</h2><div><h3>{t.observed}</h3><dl><dt>{t.predictionLabel}</dt><dd>{prediction ? t.prediction[prediction] : t.notYet}</dd><dt>{t.actionLabel}</dt><dd>{water} {t.cups}</dd><dt>{t.outcomeLabel}</dt><dd>{t.outcome[condition]}</dd><dt>{t.explanationLabel}</dt><dd>{explanation ? t.explanation[explanation] : t.notYet}</dd><dt>{t.strategyLabel}</dt><dd>{strategy ? t.strategy[strategy] : t.notYet}</dd></dl></div><div><h3>{t.interpretation}</h3><p>{t.unknown}</p></div></section>}
+      {result && <section className="tree-evidence" aria-label={t.evidence}>
+        <h2>{t.evidence}</h2>
+        <div>
+          <h3>{t.observed}</h3>
+          <dl>
+            <dt>{t.actionLabel}</dt><dd>{water} {t.cups}</dd>
+            <dt>{t.outcomeLabel}</dt><dd>{t.outcome[condition]}</dd>
+          </dl>
+        </div>
+        <div>
+          <h3>{t.childThinking}</h3>
+          <dl>
+            <dt>{t.predictionLabel}</dt><dd>{prediction ? t.prediction[prediction] : t.notYet}</dd>
+            <dt>{t.explanationLabel}</dt><dd>{explanation ? t.explanation[explanation] : t.notYet}</dd>
+            <dt>{t.strategyLabel}</dt><dd>{strategy ? t.strategy[strategy] : t.notYet}</dd>
+          </dl>
+        </div>
+        <div className="tree-evidence-unknown"><h3>{t.interpretation}</h3><p>{t.unknown}</p></div>
+      </section>}
     </div>
   );
 }

@@ -75,6 +75,7 @@ body {
 .tree-evidence { margin-top: 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 .tree-evidence h2 { grid-column: 1 / -1; }
 .tree-evidence h3 { margin: 0 0 8px; font-size: 1.1rem; color: #f5d892; }
+.tree-evidence-unknown { grid-column: 1 / -1; }
 .tree-evidence dl { display: grid; grid-template-columns: 125px 1fr; gap: 4px 12px; margin: 0; }
 .tree-evidence dt { color: #bcd2c1; }
 .tree-evidence dd { margin: 0; }
