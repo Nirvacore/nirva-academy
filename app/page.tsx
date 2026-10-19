@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import Link from "next/link";
 import { Dashboard } from "@/components/Dashboard";
 import { WeekPlan } from "@/components/WeekPlan";
 import { LearningCenterHome } from "@/components/LearningCenterHome";
@@ -14,6 +15,13 @@ export default function HomePage() {
   return (
     <Suspense fallback={null}>
       <LearningCenterHome lessons={lessons} />
+
+      <section className="tree-home-invite" aria-labelledby="tree-home-title">
+        <p className="eyebrow">Learning World · ทดลองด้วยข้อมูลสมมติ</p>
+        <h2 id="tree-home-title">ต้นไม้กำลังบอกอะไรเรา?</h2>
+        <p>ลองคาดการณ์ รดน้ำ ดูผล และเปลี่ยนวิธีคิดได้ในหนึ่งภารกิจ ไม่ต้องสมัครหรือส่งคำตอบออกไป</p>
+        <Link className="btn primary" href="/learning-world/tree">ลองภารกิจต้นไม้</Link>
+      </section>
 
       <details className="more-lms">
         <summary>แผนเรียน ผลการเรียน และรายการบททั้งหมด</summary>

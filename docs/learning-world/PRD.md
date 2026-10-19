@@ -1,6 +1,6 @@
 # Product requirements — v0.1
 
-Status: proposed foundation for review. User-requested direction comes from “เจนหลังอัลฟ่า”; this document records the implementable scope, not proof of learning outcomes.
+Status: foundation plus a candidate synthetic tree mission for review. User-requested direction comes from “เจนหลังอัลฟ่า”; this document records the implementable scope, not proof of learning outcomes.
 
 ## Product goal
 
@@ -30,7 +30,7 @@ Distinguish short-term results, longer-term trade-offs, and effects on others. F
 
 **This foundation:** documents, typed contracts, one synthetic mission, repository guardrails and CI. No playable route, account, persistence, provider SDK, database migration, production flag activation or deployment.
 
-**Next vertical slice:** one tree/water mission, deterministic rule-based consequences, a reflection prompt and reset, keyboard/touch access, scripted companion; local synthetic data only.
+**Candidate next vertical slice:** one tree/water mission, deterministic rule-based consequences, prediction and reflection choices, reset, keyboard/touch access, and scripted hints; local synthetic data only. The candidate route is `/learning-world/tree`; it is not a live pilot or evidence of learning efficacy. Adult-reviewed Thai usability remains an open acceptance check.
 
 **Later MVP target:** one city, Self/Nature/Technology areas, 20 reviewed missions, block-based coding, parent evidence view and one bounded companion. This target is not included in the foundation PR.
 

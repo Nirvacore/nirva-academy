@@ -1,6 +1,6 @@
 # Architecture and integration boundaries
 
-Status: foundation contracts; no live integrations.
+Status: foundation contracts plus one synthetic, static playable mission; no live integrations.
 
 ## Verified repository ownership
 
@@ -12,25 +12,25 @@ Academy baseline: `2e7aa6a5352e2ec71bf369160e3397969a246cf8`, root Next.js stati
 ## Additive layout
 
 ```text
-app/                         existing Academy routes, unchanged
-components/ content/ lib/    existing Academy experience, unchanged
-apps/learning-world/         future game composition; fixture only now
+app/                         Academy routes plus one tree mission route
+components/ content/ lib/    Academy experience plus tree mission component
+apps/learning-world/         synthetic mission fixture
 packages/learning-core/      mission/learning evidence types
-packages/game-core/          deterministic simulation contract types
+packages/game-core/          deterministic simulation types and tree rules
 scripts/learning-world/      foundation documentation checks
 docs/learning-world/        PRD, decisions and operational gates
 ```
 
-These are source boundaries, not independently published npm packages or a second workspace manager. Root TypeScript checks them. There is no duplicate React/Next dependency, auth store, database or AI gateway. No current Academy route imports the scaffold.
+These are source boundaries, not independently published npm packages or a second workspace manager. Root TypeScript checks them. There is no duplicate React/Next dependency, auth store, database or AI gateway. The explicit `/learning-world/tree` route imports the fixture and pure simulation; existing lessons remain in place.
 
 ## Logical engines, not six services
 
 | Boundary | Responsibility | Initial implementation |
 | --- | --- | --- |
-| World/story | Scene and mission progression | Future UI in app shell |
-| Learning | Evidence and versioned rubrics | Types only |
-| Simulation | Pure state/action → consequences | Types only; future deterministic module |
-| Companion | Reviewed hints; later bounded model call | Scripted content first |
+| World/story | Scene and mission progression | One DOM/SVG tree mission in root app |
+| Learning | Evidence and versioned rubrics | Types plus in-memory observation display; no learner record |
+| Simulation | Pure state/action → consequences | Versioned deterministic tree rules |
+| Companion | Reviewed hints; later bounded model call | Scripted hints only |
 | Safety | Access, content review, escalation, spend limits | Requirements; enforce before connection |
 
 ## Planned data flow

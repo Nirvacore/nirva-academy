@@ -3,7 +3,7 @@
 ## Small delivery slices
 
 1. Foundation: PRD/ADR/contracts/CI; no playable app or external services.
-2. One tree mission: deterministic water simulation, DOM/SVG scene, reflection/reset and scripted hints using synthetic data. Test outcome edges and keyboard/touch/reduced-motion use.
+2. One tree mission: candidate static route `/learning-world/tree` with deterministic water simulation, DOM/SVG scene, reflection/reset and scripted hints using synthetic data. Test outcome edges and keyboard/touch/reduced-motion use. Adult-reviewed Thai usability remains open.
 3. Adult-reviewed learning evidence: rubric and transferable second task; no claim of efficacy from completion counts.
 4. Guardian/teacher and shared identity contracts: implement authorization/consent/retention only after owners review the boundary.
 5. Optional AI: NirvaAI integration, offline fallback, abuse evaluation and hard budgets after explicit provider/spend authorization.
